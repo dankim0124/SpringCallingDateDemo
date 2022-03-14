@@ -25,6 +25,7 @@ public class H2Runner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+       /*
         try (Connection connection = dataSource.getConnection()) {
             logger.info(connection.getMetaData().getURL());
             logger.info(connection.getMetaData().getUserName());
@@ -37,5 +38,8 @@ public class H2Runner implements ApplicationRunner {
 
         }
         jdbcTemplate.execute("INSERT INTO USER VALUES (1,'keesun')");
+
+        */
     }
+
 }
