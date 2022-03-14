@@ -2,10 +2,12 @@ package gmail.dankim0124.datacallingdemo.model.concurrency;
 
 
 import gmail.dankim0124.datacallingdemo.model.TickRes;
+import lombok.Data;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Data
 public class ConcurrentVariable<K,V> {
     private ConcurrentHashMap concurrentMap;
 

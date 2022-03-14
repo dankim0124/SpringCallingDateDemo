@@ -2,7 +2,6 @@ package gmail.dankim0124.datacallingdemo.reqBuilder;
 
 import gmail.dankim0124.datacallingdemo.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +12,9 @@ import java.security.NoSuchAlgorithmException;
 
 @RequiredArgsConstructor
 @Component
-public class OkHttpReqBuilder {
+public class OkHttpReqs {
 
-    private Logger logger = LoggerFactory.getLogger(OkHttpReqBuilder.class);
+    private Logger logger = LoggerFactory.getLogger(OkHttpReqs.class);
 
     private final JwtTokenProvider jwtTokenProvider;
 
