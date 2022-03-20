@@ -31,9 +31,12 @@ public class ConcurrentVariable<K,V> {
         concurrentMap.putAll(adder);
     }
 
-    public Collection getListOfValue(){
-        List<TickRes> list = new ArrayList<>(concurrentMap.values()) ;
+    public Collection Values(){
         return concurrentMap.values();
+    }
+
+    public void clear(){
+        concurrentMap.clear();
     }
 
     public int size(){
@@ -42,6 +45,13 @@ public class ConcurrentVariable<K,V> {
 
     public Enumeration keys(){
         return concurrentMap.keys();
+    }
+
+    public synchronized List atomicValueListAndClear(){
+        Collection collection = concurrentMap.values();
+        ArrayList valueList = new ArrayList(collection);
+        concurrentMap.clear();
+        return valueList;
     }
 
 

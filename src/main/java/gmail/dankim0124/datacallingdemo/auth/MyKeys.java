@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class MyKeys {
-
     @Value("${security.access-key}")
     private String accessKey;
 
-    @Value("${security.sex}")
+    @Value("${security.secret-key}")
     private String secretKey;
 
 }
