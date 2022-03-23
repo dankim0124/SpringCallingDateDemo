@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class OkHttpConfiguration {
-
     @Bean("basicOkHttpClient")
     public OkHttpClient OkHttpClient(){
         ConnectionPool connectionPool = new ConnectionPool(100,1, TimeUnit.MINUTES);
@@ -20,7 +19,5 @@ public class OkHttpConfiguration {
                 .writeTimeout(1,TimeUnit.MINUTES)
                 .build();
         return okHttpClient;
-
     }
-
 }

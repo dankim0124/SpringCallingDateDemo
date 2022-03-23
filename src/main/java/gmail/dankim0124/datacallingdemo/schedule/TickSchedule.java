@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @EnableAsync
 @Component
 public class TickSchedule {
+
     Logger logger = LoggerFactory.getLogger(TickSchedule.class);
 
     @Autowired
@@ -28,9 +28,6 @@ public class TickSchedule {
 
     @Autowired
     private TickService tickService;
-
-    // TO DO
-    // : 마지막 시간 기준으로 카운트 안하기 .
 
     private Long lastConsumedTimeStamp = 0L;
     ConcurrentVariable<Long, TickRes> concurrentVariable = new ConcurrentVariable<>();
@@ -47,29 +44,27 @@ public class TickSchedule {
 
         List<TickRes> ticksFromUpbit = concurrentVariable.atomicValueListAndClear();
 
-
         logger.info("last consumed Time stamp : {}", lastConsumedTimeStamp);
 
         // 마지막 타임 스탬프 도출
         ArrayList<TickRes> newTicks = new ArrayList<>();
         for (TickRes tick : ticksFromUpbit) {
-            if(tick.getTimestamp() >= lastConsumedTimeStamp){
+            if (tick.getTimestamp() >= lastConsumedTimeStamp) {
                 newTicks.add(tick);
             }
         }
 
         // lastTimeStamp 재조정.
-        for(TickRes tick : newTicks ){
-            lastConsumedTimeStamp  = Math.max(tick.getTimestamp(),lastConsumedTimeStamp);
+        for (TickRes tick : newTicks) {
+            lastConsumedTimeStamp = Math.max(tick.getTimestamp(), lastConsumedTimeStamp);
         }
 
-        logger.info("------------------req.millis : {} ------------------",System.currentTimeMillis());
-        logger.info("SIZE OF NEW TICKS : {}" , newTicks.size());
-        logger.info("LAST TIME STAMP : {}" ,lastConsumedTimeStamp);
+        logger.info("------------------req.millis : {} ------------------", System.currentTimeMillis());
+        logger.info("SIZE OF NEW TICKS : {}", newTicks.size());
+        logger.info("LAST TIME STAMP : {}", lastConsumedTimeStamp);
         logger.info("-----------------------------------------------------------\n");
 
         tickResRepository.saveAll(newTicks);
-
     }
 
 

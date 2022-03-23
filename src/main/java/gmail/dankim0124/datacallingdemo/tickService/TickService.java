@@ -1,9 +1,7 @@
 package gmail.dankim0124.datacallingdemo.tickService;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gmail.dankim0124.datacallingdemo.account.api.client.AccountClient;
 import gmail.dankim0124.datacallingdemo.model.TickRes;
 import gmail.dankim0124.datacallingdemo.model.concurrency.ConcurrentVariable;
 import gmail.dankim0124.datacallingdemo.reqBuilder.OkHttpReqs;
@@ -30,17 +28,14 @@ public class TickService {
     OkHttpClient basicOkHttpClient;
 
     @Autowired
-    AccountClient accountClient;
-
-    @Autowired
     OkHttpReqs okHttpReqs;
 
     //register callback
-    public void publichTickCallback(Call call, ConcurrentVariable concurrentVariable){
+    public void publichTickCallback(Call call, ConcurrentVariable concurrentVariable) {
         call.enqueue(new Callback() {
             public void onResponse(Call call, Response response)
                     throws IOException {
-                handleReceive(response,concurrentVariable);
+                handleReceive(response, concurrentVariable);
             }
 
             public void onFailure(Call call, IOException e) {
@@ -51,7 +46,7 @@ public class TickService {
 
     // async callback
     public void handleReceive(Response response, ConcurrentVariable concurrentVariable) throws IOException {
-        if(response.code()!= 200){
+        if (response.code() != 200) {
             logger.info("receivedCode : {}", response.code());
             logger.info("sent at  : {}", response.sentRequestAtMillis());
             return;
@@ -74,7 +69,7 @@ public class TickService {
 
         // 맵을 공유변수에 저장 .
         concurrentVariable.addAll(map);
-        logger.info("sent at {} | received {} ticks" , response.sentRequestAtMillis() , concurrentVariable.size());
+        logger.info("sent at {} | received {} ticks", response.sentRequestAtMillis(), concurrentVariable.size());
 
     }
 
@@ -82,7 +77,7 @@ public class TickService {
         return okHttpReqs.tickReq(queryString);
     }
 
-    public Call makeCall(Request request){
+    public Call makeCall(Request request) {
         return basicOkHttpClient.newCall(request);
     }
 

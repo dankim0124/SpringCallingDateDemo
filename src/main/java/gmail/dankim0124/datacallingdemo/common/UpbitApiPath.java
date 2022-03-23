@@ -6,6 +6,8 @@ public class UpbitApiPath {
 
     public static final String API_VERSION = "/v1";
 
+    public static final String TICK_API = "/tick";
+
     public static final String BASE_SERVER_URL = SERVER_URL + API_VERSION;
 
 }

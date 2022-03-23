@@ -1,4 +1,4 @@
-package gmail.dankim0124.datacallingdemo.jwt;
+package gmail.dankim0124.datacallingdemo.auth.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
