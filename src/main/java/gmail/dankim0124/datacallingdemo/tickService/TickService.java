@@ -22,6 +22,10 @@ import java.util.stream.Collectors;
 public class TickService {
     Logger logger = LoggerFactory.getLogger(TickService.class);
 
+    private static long ETHReqCount = 0L;
+    private static long lastETHReqTime = 0L;
+    private volatile static long remainedCallback = 0L;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -47,8 +51,12 @@ public class TickService {
     // async callback
     public void handleReceive(Response response, ConcurrentVariable concurrentVariable) throws IOException {
         if (response.code() != 200) {
+            logger.info("--------------------recieved message------------------------");
             logger.info("receivedCode : {}", response.code());
             logger.info("sent at  : {}", response.sentRequestAtMillis());
+            logger.info("error: {}", response.body().string());
+            logger.info("request: {}", response.request().url());
+            logger.info("--------------------------------------------------------\n");
             return;
         }
 
@@ -69,8 +77,6 @@ public class TickService {
 
         // 맵을 공유변수에 저장 .
         concurrentVariable.addAll(map);
-        logger.info("sent at {} | received {} ticks", response.sentRequestAtMillis(), concurrentVariable.size());
-
     }
 
     public Request currentTickReq(String queryString) throws UnsupportedEncodingException, NoSuchAlgorithmException {
