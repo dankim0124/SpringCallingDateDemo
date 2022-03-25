@@ -15,8 +15,8 @@ public class OkHttpConfiguration {
         ConnectionPool connectionPool = new ConnectionPool(100,1, TimeUnit.MINUTES);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectionPool(connectionPool)
-                .callTimeout(1,TimeUnit.MINUTES)
-                .writeTimeout(1,TimeUnit.MINUTES)
+                .callTimeout(10,TimeUnit.SECONDS)
+                .writeTimeout(10,TimeUnit.SECONDS)
                 .build();
         return okHttpClient;
     }
