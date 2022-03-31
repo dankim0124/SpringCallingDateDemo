@@ -1,6 +1,7 @@
 package gmail.dankim0124.datacallingdemo.repository;
 
-import gmail.dankim0124.datacallingdemo.model.TickRes;
+import gmail.dankim0124.datacallingdemo.model.RestTick;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest // slice test : db 관련한 것만 가져옴
-public class TickResRepositoryTest {
+public class RestTickRepositoryTest {
     @Autowired
     DataSource dataSource;
 
@@ -29,13 +30,13 @@ public class TickResRepositoryTest {
     TickResRepository tickResRepository;
 
     @Test
-    public void di(){
+    public void di() {
 
     }
 
     @Test
-    public void readMetaDataFromDataSource(){
-        try(Connection connection = dataSource.getConnection()){
+    public void readMetaDataFromDataSource() {
+        try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();
             System.out.println(metaData.getDriverName());
             System.out.println(metaData.getURL());
@@ -45,14 +46,14 @@ public class TickResRepositoryTest {
     }
 
     @Test
-    public void jpaTest(){
-        TickRes tickRes = new TickRes();
+    public void jpaTest() {
+        RestTick tickRes = new RestTick();
         tickRes.setSequentialId(21321321313L);
         tickRes.setMarket("dummy market");
 
-        TickRes newTick = tickResRepository.save(tickRes);
+        RestTick newTick = tickResRepository.save(tickRes);
 
-        TickRes getTick = tickResRepository.findBySequentialId(21321321313L);
+        RestTick getTick = tickResRepository.findBySequentialId(21321321313L);
 
         System.out.println(getTick);
 

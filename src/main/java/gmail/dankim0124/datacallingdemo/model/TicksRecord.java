@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class TicksRecord {
     private long lastTimeStamp;
     private String coin;
-    private ConcurrentVariable<Long,TickRes> concurrentVariable;
+    private ConcurrentVariable<Long,RestTick> concurrentVariable;
 
     public TicksRecord(String coinName){
         this.lastTimeStamp = 0;
