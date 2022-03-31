@@ -63,7 +63,7 @@ public class TickService {
         // 응답을 TickRes 자료형으로
         List<TickRes> tickResList = objectMapper.readValue(
                 response.body().string(),
-                new TypeReference<List<TickRes>>() {
+                new TypeReference<>() {
                 });
 
         //sequential_id 를 키로 갖는 맵으로

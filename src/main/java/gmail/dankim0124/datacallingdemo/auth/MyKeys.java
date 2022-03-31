@@ -13,5 +13,4 @@ public class MyKeys {
 
     @Value("${security.secret-key}")
     private String secretKey;
-
 }
