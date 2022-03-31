@@ -96,7 +96,6 @@ class EchoWebSocketListener extends WebSocketListener {
         String converted = bytes.utf8();
         try {
             SocketTick socketTick = objectMapper.readValue(converted, SocketTick.class);
-            System.out.println(socketTick);
             socketTickRepository.save(socketTick);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
