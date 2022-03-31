@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity(name = "btc_ticks")
-public class TickRes {
+public class RestTick {
     @Id
     @JsonProperty("sequential_id")
     private Long sequentialId;
