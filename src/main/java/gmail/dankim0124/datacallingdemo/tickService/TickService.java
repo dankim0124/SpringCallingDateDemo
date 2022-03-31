@@ -2,7 +2,7 @@ package gmail.dankim0124.datacallingdemo.tickService;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gmail.dankim0124.datacallingdemo.model.TickRes;
+import gmail.dankim0124.datacallingdemo.model.RestTick;
 import gmail.dankim0124.datacallingdemo.model.concurrency.ConcurrentVariable;
 import gmail.dankim0124.datacallingdemo.reqBuilder.OkHttpReqs;
 import okhttp3.*;
@@ -61,15 +61,15 @@ public class TickService {
         }
 
         // 응답을 TickRes 자료형으로
-        List<TickRes> tickResList = objectMapper.readValue(
+        List<RestTick> tickResList = objectMapper.readValue(
                 response.body().string(),
-                new TypeReference<List<TickRes>>() {
+                new TypeReference<List<RestTick>>() {
                 });
 
         //sequential_id 를 키로 갖는 맵으로
-        Map<Long, TickRes> map = tickResList.stream().collect(
+        Map<Long, RestTick> map = tickResList.stream().collect(
                 Collectors.toMap(
-                        TickRes::getSequentialId,
+                        RestTick::getSequentialId,
                         item -> item,
                         (oldKey, newKey) -> newKey
                 )

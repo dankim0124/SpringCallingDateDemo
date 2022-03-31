@@ -1,6 +1,6 @@
 package gmail.dankim0124.datacallingdemo.schedule;
 
-import gmail.dankim0124.datacallingdemo.model.TickRes;
+import gmail.dankim0124.datacallingdemo.model.RestTick;
 import gmail.dankim0124.datacallingdemo.model.TicksRecord;
 import gmail.dankim0124.datacallingdemo.model.concurrency.ConcurrentVariable;
 import gmail.dankim0124.datacallingdemo.repository.TickResRepository;
@@ -59,19 +59,19 @@ public class TickSchedule {
         for(String coin : conins) {
             ConcurrentVariable concurrentVariable = ticksRecordMap.get(coin).getConcurrentVariable();
             Long lastConsumedTimeStamp = ticksRecordMap.get(coin).getLastTimeStamp();
-            ArrayList<TickRes> newTicks = new ArrayList<>();
+            ArrayList<RestTick> newTicks = new ArrayList<>();
 
-            List<TickRes> ticksFromUpbit = concurrentVariable.atomicValueListAndClear();
+            List<RestTick> ticksFromUpbit = concurrentVariable.atomicValueListAndClear();
 
             // 마지막 타임 스탬프 도출
-            for (TickRes tick : ticksFromUpbit) {
+            for (RestTick tick : ticksFromUpbit) {
                 if (tick.getTimestamp() >= lastConsumedTimeStamp) {
                     newTicks.add(tick);
                 }
             }
 
             // lastTimeStamp 재조정.
-            for (TickRes tick : newTicks) {
+            for (RestTick tick : newTicks) {
                 lastConsumedTimeStamp = Math.max(tick.getTimestamp(), lastConsumedTimeStamp);
             }
 
