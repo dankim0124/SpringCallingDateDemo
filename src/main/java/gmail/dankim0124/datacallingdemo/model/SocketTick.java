@@ -11,9 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
 
 @Data
-@Entity(name = "socket_tick")
+@Entity(name = "socket_tick_test")
+@Table(name = "socket_tick_sample")
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor

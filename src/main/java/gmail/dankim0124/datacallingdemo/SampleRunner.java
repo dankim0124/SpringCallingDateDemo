@@ -29,33 +29,20 @@ public class SampleRunner implements ApplicationRunner {
     ApplicationContext ctx;
 
     private volatile String[] COINS =
-            {"KRW-BTC", "KRW-XRP", "KRW-ETH", "KRW-STX", "KRW-SOL", "KRW-ADA", "KRW-DOT", "KRW-BCH", "KRW-BAT", "KRW-AVAX", "KRW-ETC", "KRW-AXS", "KRW-PLA", "KRW-SAND", "KRW-SRM", "KRW-DOGE", "KRW-MANA", "KRW-FLOW", "KRW-BTG", "KRW-ATOM", "KRW-MATIC", "KRW-ENJ", "KRW-CHZ"};
+            {"KRW-STX", "KRW-SOL", "KRW-DOT",};
 
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
         Request request = new Request.Builder().url("wss://api.upbit.com/websocket/v1").build();
-
-
         EchoWebSocketListener listener = (EchoWebSocketListener) ctx.getBean(EchoWebSocketListener.class);
         ArrayList<String> sampleCoins = new ArrayList<>();
-        for(int i =0; i< 10; i++){
+        for(int i =0; i< 3; i++){
             sampleCoins.add(COINS[i]);
         }
         listener.setListener("dankim0124","trade",sampleCoins,"SIMPLE");
         WebSocket ws = basicOkHttpClient.newWebSocket(request, listener);
-
-
-
-        Request request2 = new Request.Builder().url("wss://api.upbit.com/websocket/v1").build();
-        EchoWebSocketListener listener2 = (EchoWebSocketListener) ctx.getBean(EchoWebSocketListener.class);
-        ArrayList<String> sampleCoins2 = new ArrayList<>();
-        for(int i =10; i< COINS.length; i++){
-            sampleCoins2.add(COINS[i]);
-        }
-        listener2.setListener("dankim0124","trade",sampleCoins2,"SIMPLE");
-        WebSocket ws2 = basicOkHttpClient.newWebSocket(request2, listener2);
 
 
     }
