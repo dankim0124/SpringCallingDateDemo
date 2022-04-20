@@ -33,7 +33,8 @@ public class SampleRunner implements ApplicationRunner , UpbitSocketFailSubscrib
     WebSocket ws;
 
     private volatile String[] COINS =
-            {"KRW-STX", "KRW-SOL", "KRW-DOT",};
+            {"KRW-BTC", "KRW-XRP", "KRW-ETH", "KRW-STX", "KRW-SOL", "KRW-ADA", "KRW-DOT", "KRW-BCH", "KRW-BAT", "KRW-AVAX", "KRW-ETC", "KRW-AXS", "KRW-PLA", "KRW-SAND", "KRW-SRM", "KRW-DOGE", "KRW-MANA", "KRW-FLOW", "KRW-BTG", "KRW-ATOM", "KRW-MATIC", "KRW-ENJ", "KRW-CHZ"};
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -55,6 +56,7 @@ public class SampleRunner implements ApplicationRunner , UpbitSocketFailSubscrib
             sampleCoins.add(COINS[i]);
         }
         listener.setListener("dankim0124","trade",sampleCoins,"SIMPLE");
+        listener.setUpbitSocketFailSubscriber(this);
         return  listener;
     }
 
@@ -118,8 +120,6 @@ class EchoWebSocketListener extends WebSocketListener implements UpbitSocketFail
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -131,6 +131,9 @@ class EchoWebSocketListener extends WebSocketListener implements UpbitSocketFail
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         t.printStackTrace();
+        System.out.println("time : " + System.currentTimeMillis() );
+        System.out.println("try restart ");
+        this.notifyUpbitSocketFail();
     }
 
     public void setListener(String ticket, String type, ArrayList<String> codes, String format) {
@@ -150,7 +153,6 @@ class EchoWebSocketListener extends WebSocketListener implements UpbitSocketFail
             }
         }
         codesString += "]";
-        System.out.println(codesString);
 
         return String.format("[{\"ticket\":\"%s\"},{\"type\":\"%s\",\"codes\":%s}," + "{\"format\":\"%s\"}]", ticket, type, codesString, format);
 
