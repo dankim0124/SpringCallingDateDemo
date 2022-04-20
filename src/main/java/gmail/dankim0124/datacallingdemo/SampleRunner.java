@@ -3,6 +3,8 @@ package gmail.dankim0124.datacallingdemo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gmail.dankim0124.datacallingdemo.model.SocketTick;
+import gmail.dankim0124.datacallingdemo.pubsub.UpbitSocketFailPublisher;
+import gmail.dankim0124.datacallingdemo.pubsub.UpbitSocketFailSubscriber;
 import gmail.dankim0124.datacallingdemo.repository.SocketTickRepository;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 
 
 @Component
-public class SampleRunner implements ApplicationRunner {
+public class SampleRunner implements ApplicationRunner , UpbitSocketFailSubscriber {
 
     @Autowired
     OkHttpClient basicOkHttpClient;
@@ -28,25 +30,52 @@ public class SampleRunner implements ApplicationRunner {
     @Autowired
     ApplicationContext ctx;
 
+    WebSocket ws;
+
     private volatile String[] COINS =
             {"KRW-STX", "KRW-SOL", "KRW-DOT",};
-
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Request request = new Request.Builder().url("wss://api.upbit.com/websocket/v1").build();
-        EchoWebSocketListener listener = (EchoWebSocketListener) ctx.getBean(EchoWebSocketListener.class);
+        Request request = readyRequest();
+        EchoWebSocketListener listener =getNewListener();
+        ws = runSocket(request,listener);
+    }
+
+    private Request readyRequest(){
+        return  new Request.Builder().url("wss://api.upbit.com/websocket/v1").build();
+    }
+
+    private EchoWebSocketListener getNewListener(){
+        EchoWebSocketListener listener =(EchoWebSocketListener) ctx.getBean(EchoWebSocketListener.class);
+
         ArrayList<String> sampleCoins = new ArrayList<>();
-        for(int i =0; i< 3; i++){
+        for(int i =0; i< COINS.length; i++){
             sampleCoins.add(COINS[i]);
         }
         listener.setListener("dankim0124","trade",sampleCoins,"SIMPLE");
-        WebSocket ws = basicOkHttpClient.newWebSocket(request, listener);
-
-
+        return  listener;
     }
 
+    public WebSocket runSocket(Request request, WebSocketListener listener){
+        this.ws = basicOkHttpClient.newWebSocket(request,listener);
+        return this.ws;
+    }
+
+    @Override
+    public void notifiedUpbitSocketFailed() {
+        ws = null;
+        try {
+            Thread.sleep(10000);
+        }catch (Exception e){
+            System.out.println("ERROR DURING TIME BETWEEN RESTART ");
+        }
+
+        Request request = readyRequest();
+        EchoWebSocketListener listener =getNewListener();
+        ws = basicOkHttpClient.newWebSocket(request, listener);
+    }
 }
 
 
@@ -54,7 +83,7 @@ public class SampleRunner implements ApplicationRunner {
 @Scope(value = "prototype")
 @Getter
 @Setter
-class EchoWebSocketListener extends WebSocketListener {
+class EchoWebSocketListener extends WebSocketListener implements UpbitSocketFailPublisher {
 
     @Autowired
     SocketTickRepository socketTickRepository;
@@ -66,6 +95,8 @@ class EchoWebSocketListener extends WebSocketListener {
     private String type;
     private ArrayList<String> codes;
     private String format;
+
+    private UpbitSocketFailSubscriber upbitSocketFailSubscriber;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -123,5 +154,15 @@ class EchoWebSocketListener extends WebSocketListener {
 
         return String.format("[{\"ticket\":\"%s\"},{\"type\":\"%s\",\"codes\":%s}," + "{\"format\":\"%s\"}]", ticket, type, codesString, format);
 
+    }
+
+    @Override
+    public void notifyUpbitSocketFail() {
+        this.upbitSocketFailSubscriber.notifiedUpbitSocketFailed();
+    }
+
+    @Override
+    public void registerSubscriber(UpbitSocketFailSubscriber subscriber) {
+            this.upbitSocketFailSubscriber = subscriber;
     }
 }
